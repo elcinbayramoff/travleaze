@@ -146,6 +146,7 @@ const titleid= {
     "Zərdab": "AZ-ZAR",
     "Zəngəzur":"AZ-ZGR"
 }
+//shortest path overall
 function findShortestPath(graph, start, end) {
     if (start === end) {
         return [start];
@@ -171,6 +172,7 @@ function findShortestPath(graph, start, end) {
 
     return null;  // No path found
 }
+//This is for finding shortest path after winning
 function shortestResult(array,start,end){
     var tempGraph = {};
     for(var i=0;i<array.length;i++){
@@ -185,12 +187,14 @@ function shortestResult(array,start,end){
     }
     return findShortestPath(tempGraph,start,end);
 }
+//Choosing random start
 const startindex = Math.floor(Math.random()*71);
-
+//checking if 2 region is neighbor
 function isAdjacentTo(main,region) {
     const adjacentVerticesOfAbseron = graph[main];
     return adjacentVerticesOfAbseron.includes(region);
 }
+//for finding end region. Selecting same region and neighbor regions is excluded
 function endfinder(startKey){
     var ender = Math.floor(Math.random()*71);
     var ending = Object.keys(titleid)[ender];
@@ -203,18 +207,25 @@ function endfinder(startKey){
     console.log(ending);
     return ending;
 }
-
+//Now it is the title of the start
 const startKey = Object.keys(titleid)[startindex];
 console.log("Starting:",startKey);
+//title of the end
 var endKey = endfinder(startKey);
+//we find the shortest path from start to end
 const shortestPath = findShortestPath(graph, startKey, endKey);
 const numberofshortestpath = shortestPath.length;
+//We allow 40% accuracy mistake
 var allowednumberofpath = Math.round(shortestPath.length*1.4);
 const FromTo = 'From '+startKey+' to '+endKey;
+//For display
 document.getElementById('fromto').innerText=FromTo;
+//during the game all the regions that are neighbor with startkey
 var neighbors = [startKey];
+//during the game all the regions that are not neighbor with startkey
 var notneighbors = [endKey];
 var allregions = [];
+//loading and making all elements display none. Just start and end is block
 function loadAndManipulateSVG() {
     fetch("azerbaijan.svg")
     .then(response => response.text())
@@ -239,6 +250,7 @@ function loadAndManipulateSVG() {
     .catch(error => console.error("Error loading SVG:", error));
 }
 loadAndManipulateSVG();
+//for checking/changing neighbors/notneigbors according to the changes.
 function checknotneighbors(){
     var changed=[];
     for(var i=0;i<notneighbors.length;i++){
@@ -265,16 +277,20 @@ function checknotneighbors(){
 
 }
 document.getElementById("shortpath").innerText="Left chances: "+allowednumberofpath;
+//How many is inputted
 let counter=0;
 function showSVGPart() {
     var inputfield =document.getElementById("svgPartInput");
     var title = inputfield.value;
     inputfield.value="";
     inputfield.focus();
+    //for working with id of the svg path elements
     var partID = titleid[title];
     var partElement = document.getElementById(partID)
+    //if chances left or end region is not found, or element exists
     if(allowednumberofpath>0 && !neighbors.includes(endKey) && partElement){
         counter++;
+        //showing included regions
         const listItem = document.createElement("li");
         const nameList = document.getElementById("nameList");
         listItem.textContent = counter + ") " + title;
@@ -285,8 +301,10 @@ function showSVGPart() {
     if (partElement) {
         const title = partElement.getAttribute('title');
         allregions.push(title);
+        //displaying included region
         partElement.style.display = 'block';
         console.log(title);
+        //checks if added region is neighbor with any green filled block
         for (var i = 0; i < neighbors.length; i++) {
             if (isAdjacentTo(neighbors[i], title)) {
                 partElement.setAttribute('fill', 'green');
@@ -294,20 +312,26 @@ function showSVGPart() {
                     neighbors.push(title); 
                     isneighbor=true;
                 }
+                //If region is neighbor to any of them we need to exculde it from notneighbors list
                 if(notneighbors.includes(title)){
                     notneighbors = notneighbors.filter(value=> value!==title)
                 }
                 console.log(notneighbors);
                 console.log(neighbors);
+                //updates all the regions according to new changes. F.e, region A and C are not neighbor, but B is neighbor with both. Then when B added
+                //this function helps to check all previously added regions' status
                 checknotneighbors();
                 break; 
             }
         }
+        //if isneigbor remained false we need to add the new region to the list
         if(!isneighbor && !notneighbors.includes(title)){
             notneighbors.push(title);
         }
+        //this is the win situation
         if(neighbors.includes(endKey)){
             var element =document.getElementById('fromto');
+            //this shows shortest result from start to end if we won
             element.innerText=shortestResult(neighbors,startKey,endKey);
             const pathElements = document.getElementsByTagName("path");
             for (let i = 0; i < pathElements.length; i++) {
@@ -318,6 +342,7 @@ function showSVGPart() {
                 element.setAttribute('fill','gray');
             }
         }
+        //if chances became 0 and none of them executed then it means we didnt won
         else if(allowednumberofpath===0){
             document.createElement('p').innerText="You didn't won"
         }
