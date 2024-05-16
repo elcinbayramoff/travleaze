@@ -146,6 +146,48 @@ const titleid= {
     "Zərdab": "AZ-ZAR",
     "Zəngəzur":"AZ-ZGR"
 }
+//till findShortestPath it is for giving suggestions
+const inputField = document.getElementById("svgPartInput");
+const suggestionsContainer = document.getElementById("suggestions");
+
+const relatedWords = Object.keys(titleid);
+
+function filterWords(inputValue) {
+  return relatedWords.filter(word => word.toLowerCase().includes(inputValue.toLowerCase()));
+}
+
+function displaySuggestions(inputValue) {
+if (inputValue === "") {
+        suggestionsContainer.innerHTML = ""; 
+        return; 
+    }
+  const filteredWords = filterWords(inputValue).slice(0,6);
+  suggestionsContainer.innerHTML = "";
+
+  filteredWords.forEach(word => {
+    const suggestion = document.createElement("div");
+    suggestion.classList.add("suggestion");
+    suggestion.textContent = word;
+
+    suggestion.addEventListener("click", () => {
+      inputField.value = word;
+      suggestionsContainer.innerHTML = "";
+    });
+
+    suggestionsContainer.appendChild(suggestion);
+  });
+}
+
+inputField.addEventListener("input", () => {
+  const inputValue = inputField.value.trim();
+  displaySuggestions(inputValue);
+});
+
+function titlehandler(title){
+    title=title.trim();
+    title = title.charAt(0).toUpperCase()+title.substr(1).toLowerCase()
+    return title
+}
 //shortest path overall
 function findShortestPath(graph, start, end) {
     if (start === end) {
@@ -282,6 +324,8 @@ let counter=0;
 function showSVGPart() {
     var inputfield =document.getElementById("svgPartInput");
     var title = inputfield.value;
+    title=titlehandler(title);
+    console.log('Title',title);
     inputfield.value="";
     inputfield.focus();
     //for working with id of the svg path elements
