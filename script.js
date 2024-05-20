@@ -376,7 +376,14 @@ function showSVGPart() {
         if(neighbors.includes(endKey)){
             var element =document.getElementById('fromto');
             //this shows shortest result from start to end if we won
-            element.innerText=shortestResult(neighbors,startKey,endKey);
+            let arr = shortestResult(neighbors,startKey,endKey);
+            let paths = arr.map(id=>document.querySelector(`path#${titleid[id]}`))
+            for (const [i, path] of paths.entries()) 
+                setTimeout(()=>{
+                    path.classList.add("winimate")
+                }, i * 200)
+            console.log(paths)
+            element.innerText = arr;
             const pathElements = document.getElementsByTagName("path");
             for (let i = 0; i < pathElements.length; i++) {
                 pathElements[i].style.display = "block";

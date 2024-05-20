@@ -1,5 +1,37 @@
-
-  .suggestion:hover {
+.suggestion:hover {
     background-color: #f0f0f0;
-  }
-  
+}
+
+@keyframes winanim{
+    0% {
+        filter: 
+            drop-shadow(0 0 #99ff99)
+            drop-shadow(0 0 #99ff99)
+            drop-shadow(0 0 #99ff99)
+            drop-shadow(0 0 #99ff99)
+        ;
+    }
+    30% {
+        filter: 
+            drop-shadow(14px 0 #99ff99)
+            drop-shadow(-14px 0 #99ff99)
+            drop-shadow(0 14px #99ff99)
+            drop-shadow(0 -14px #99ff99)
+        ;
+    }
+    100% {
+        filter: 
+            drop-shadow(0 0 #99ff9900)
+            drop-shadow(0 0 #99ff9900)
+            drop-shadow(0 0 #99ff9900)
+            drop-shadow(0 0 #99ff9900)
+        ;
+    }
+}
+
+.winimate {
+    animation: winanim 800ms;
+    animation-timing-function: ease-in-out;
+    transform-origin: center;
+    border: 2px solid red !important;
+}
