@@ -153,30 +153,33 @@ const suggestionsContainer = document.getElementById("suggestions");
 const relatedWords = Object.keys(titleid);
 
 function filterWords(inputValue) {
-  return relatedWords.filter(word => word.toLowerCase().includes(inputValue.toLowerCase()));
-}
-
-function displaySuggestions(inputValue) {
-if (inputValue === "") {
-        suggestionsContainer.innerHTML = ""; 
-        return; 
+    console.log(relatedWords.filter(word => word.toLocaleLowerCase('tr-TR').includes(inputValue.toLocaleLowerCase('tr-TR'))));
+    return relatedWords.filter(word => word.toLocaleLowerCase('tr-TR').includes(inputValue.toLocaleLowerCase('tr-TR')));
+  }
+  
+  function displaySuggestions(inputValue) {
+    if (inputValue === "") {
+      suggestionsContainer.innerHTML = ""; 
+      return; 
     }
-  const filteredWords = filterWords(inputValue).slice(0,6);
-  suggestionsContainer.innerHTML = "";
-
-  filteredWords.forEach(word => {
-    const suggestion = document.createElement("div");
-    suggestion.classList.add("suggestion");
-    suggestion.textContent = word;
-
-    suggestion.addEventListener("click", () => {
-      inputField.value = word;
-      suggestionsContainer.innerHTML = "";
+  
+    const filteredWords = filterWords(inputValue).slice(0, 6);
+    suggestionsContainer.innerHTML = "";
+  
+    filteredWords.forEach(word => {
+      const suggestion = document.createElement("div");
+      suggestion.classList.add("suggestion");
+      suggestion.textContent = word;
+  
+      suggestion.addEventListener("click", () => {
+        inputField.value = word;
+        suggestionsContainer.innerHTML = "";
+      });
+  
+      suggestionsContainer.appendChild(suggestion);
     });
-
-    suggestionsContainer.appendChild(suggestion);
-  });
-}
+  }
+  
 
 inputField.addEventListener("input", () => {
   const inputValue = inputField.value.trim();
@@ -281,7 +284,7 @@ function loadAndManipulateSVG() {
         });
         var starting = svgDoc.getElementById(titleid[startKey]);
         starting.style.display = 'block';
-        starting.setAttribute("fill","green");
+        starting.setAttribute("fill","#0f7");
 
         var ending = svgDoc.getElementById(titleid[endKey]);
         ending.style.display = 'block';
@@ -308,7 +311,7 @@ function checknotneighbors(){
         index = notneighbors.indexOf(changed[k]);
         var element = document.getElementById(titleid[changed[k]]);
         var title = element.getAttribute('title');
-        element.setAttribute('fill', 'green');
+        element.setAttribute('fill', '#0f7');
         notneighbors.splice(index, 1);
         if (!neighbors.includes(title)) {
             neighbors.push(title); 
@@ -351,7 +354,7 @@ function showSVGPart() {
         //checks if added region is neighbor with any green filled block
         for (var i = 0; i < neighbors.length; i++) {
             if (isAdjacentTo(neighbors[i], title)) {
-                partElement.setAttribute('fill', 'green');
+                partElement.setAttribute('fill', '#0f7');
                 if (!neighbors.includes(title)) {
                     neighbors.push(title); 
                     isneighbor=true;

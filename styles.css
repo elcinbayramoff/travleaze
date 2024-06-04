@@ -1,3 +1,67 @@
+body {
+	font-family: sans-serif;
+	background-color: #ddd;
+}
+
+.top {
+	padding: 50px;
+	padding-top: 100px;
+}
+
+path {
+	animation: pather 600ms;
+	transform-origin: center;
+}
+
+path:hover {
+	fill: #087;
+}
+
+@keyframes pather{
+	from {
+		transform: scale(0.7);
+	}
+	to {
+		transform: scale(1);
+	}
+}
+
+.relaxed {
+	gap: 19px;
+}
+
+button,input {
+	padding: 15px 17px;
+	border-radius: 7px;
+	border: none;
+	border: 1px solid #666;
+}
+
+input {
+	padding: 5px 17px;
+}
+
+button {
+	background-color: #bcc;
+}
+
+button:hover {
+	background-color: #aff;
+
+}
+
+#nameList {
+	list-style: none;
+	padding-right: 10px;
+}
+
+#nameList li {
+	margin: 4px;
+	border-radius: 3px;
+	background-color: #99a;
+	padding: 8px;
+}
+
 .suggestion:hover {
     background-color: #f0f0f0;
 }

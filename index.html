@@ -7,14 +7,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <p id="fromto"></p>
-    <p id="shortpath"></p>
-    <input type="text" id="svgPartInput" placeholder="Enter SVG part ID">
-    <div id="suggestions"></div>
-    <button onclick="showSVGPart()">Show</button>
-    <ul id="nameList"></ul>
-    <div id="svgContainer"></div>
-    <div id="gameResult"></div>
+    <div class="top row box">
+        <div class="relaxed col">
+            <p id="fromto"></p>
+            <p id="shortpath"></p>
+            <input type="text" id="svgPartInput" placeholder="Enter SVG part ID">
+            <div id="suggestions"></div>
+            <button onclick="showSVGPart()">Show</button>
+            <ul id="nameList"></ul>
+            
+        </div>
+        <div class="col">
+            
+            <div id="svgContainer"></div>
+            <div id="gameResult"></div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
