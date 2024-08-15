@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SVG Manipulation</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .top.row.box {
+            display: flex;
+            justify-content: space-between;
+        }
+        .col {
+            flex: 1;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="top row box">
@@ -15,10 +25,8 @@
             <div id="suggestions"></div>
             <button onclick="showSVGPart()">Show</button>
             <ul id="nameList"></ul>
-            
         </div>
         <div class="col">
-            
             <div id="svgContainer"></div>
             <div id="gameResult"></div>
         </div>
