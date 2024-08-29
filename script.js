@@ -167,21 +167,47 @@ function filterWords(inputValue) {
     suggestionsContainer.innerHTML = "";
   
     filteredWords.forEach(word => {
-      const suggestion = document.createElement("div");
+      const suggestion = document.createElement("button");
       suggestion.classList.add("suggestion");
       suggestion.textContent = word;
   
       suggestion.addEventListener("click", () => {
         inputField.value = word;
         suggestionsContainer.innerHTML = "";
+		  document.querySelector(".btn.show").focus()
       });
+      suggestion.addEventListener("keydown", e => {
+		  if (e.keyCode == 40) {
+			  e.target.nextSibling?.focus()
+			  e.preventDefault()
+		  }
+      });
+      suggestion.addEventListener("keydown", e => {
+		  if (e.keyCode == 38) {
+			  const prev = e.target.previousSibling
+			  prev?.focus()
+			  if (!prev) inputField.focus()
+			  e.preventDefault()
+		  }
+      });
+  
   
       suggestionsContainer.appendChild(suggestion);
     });
   }
   
 
-inputField.addEventListener("input", () => {
+inputField.addEventListener("keydown", e => {
+	if (e.keyCode == 40) {
+		e.preventDefault()
+		document
+			.querySelector("#suggestions")
+			.querySelector("button")
+			.focus()
+	}
+})
+	
+inputField.addEventListener("input", e => {
   const inputValue = inputField.value.trim();
   displaySuggestions(inputValue);
 });
@@ -321,7 +347,8 @@ function checknotneighbors(){
     };
 
 }
-document.getElementById("shortpath").innerText="Left chances: "+allowednumberofpath;
+// document.getElementById("shortpath").innerText="Left chances: "+allowednumberofpath;
+document.querySelector(".btn.show").innerText="Show (left: "+allowednumberofpath+")";
 //How many is inputted
 let counter=0;
 function showSVGPart() {
@@ -343,7 +370,8 @@ function showSVGPart() {
         listItem.textContent = counter + ") " + title;
         nameList.appendChild(listItem);
     allowednumberofpath=allowednumberofpath-1;
-    document.getElementById("shortpath").innerText="Left chances: "+allowednumberofpath;
+    // document.getElementById("shortpath").innerText="Left chances: "+allowednumberofpath;
+    document.querySelector(".btn.show").innerText="Show (left: "+allowednumberofpath+")";
     let isneighbor = false;
     if (partElement) {
         const title = partElement.getAttribute('title');

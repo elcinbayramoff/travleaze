@@ -11,10 +11,12 @@ body {
 path {
 	animation: pather 600ms;
 	transform-origin: center;
+	transition: 200ms;
 }
 
 path:hover {
 	fill: #087;
+	transition: 0ms;
 }
 
 @keyframes pather{
@@ -24,10 +26,6 @@ path:hover {
 	to {
 		transform: scale(1);
 	}
-}
-
-.relaxed {
-	gap: 19px;
 }
 
 button,input {
@@ -53,12 +51,13 @@ button:hover {
 #nameList {
 	list-style: none;
 	padding-right: 10px;
+	padding-left: 0
 }
 
 #nameList li {
 	margin: 4px;
 	border-radius: 3px;
-	background-color: #99a;
+	background-color: #ccc;
 	padding: 8px;
 }
 
@@ -98,4 +97,46 @@ button:hover {
     animation-timing-function: ease-in-out;
     transform-origin: center;
     border: 2px solid red !important;
+}
+
+/**/
+
+.btn {
+	margin: 8px
+}
+
+#suggestions {
+	display: flex;
+	flex-direction: column;
+	gap: 4px
+}
+
+#suggestions button {
+	padding: 7px;
+	border: none;
+	background-color: transparent;
+	text-align: left
+}
+
+#suggestions button:hover {
+	background-color: #ccc
+}
+#suggestions button:focus{
+	background-color: #bbb
+}
+
+
+#suggestions {
+	transition: 300ms;
+	transform: translate(0px, -20px)
+}
+
+#suggestions:has(.suggestion) {
+	transition: 300ms;
+	transform: translate(0px, 0px);
+	/* padding-top: 10px !important; */
+}
+
+#svgPartInput {
+	padding: 13px
 }
