@@ -146,6 +146,29 @@ const titleid= {
     "Zərdab": "AZ-ZAR",
     "Zəngəzur":"AZ-ZGR"
 }
+var diffucultyLevel = '';
+document.getElementById('easy').addEventListener('click', function() {
+    this.classList.add('clicked');
+    diffucultyLevel = 'easy';
+    resetGame();
+    document.getElementById('medium').classList.remove('clicked');
+    document.getElementById('hard').classList.remove('clicked');
+});
+document.getElementById('medium').addEventListener('click', function() {
+    this.classList.add('clicked');
+    diffucultyLevel ='medium';
+    resetGame();
+    document.getElementById('easy').classList.remove('clicked');
+    document.getElementById('hard').classList.remove('clicked');
+});
+document.getElementById('hard').addEventListener('click', function() {
+    this.classList.add('clicked');
+    diffucultyLevel = 'hard';
+    resetGame();
+    document.getElementById('easy').classList.remove('clicked');
+    document.getElementById('medium').classList.remove('clicked');
+});
+
 //till findShortestPath it is for giving suggestions
 const inputField = document.getElementById("svgPartInput");
 const suggestionsContainer = document.getElementById("suggestions");
@@ -258,14 +281,12 @@ function shortestResult(array,start,end){
     }
     return findShortestPath(tempGraph,start,end);
 }
-//Choosing random start
-const startindex = Math.floor(Math.random()*71);
 //checking if 2 region is neighbor
 function isAdjacentTo(main,region) {
     const adjacentVerticesOfAbseron = graph[main];
     return adjacentVerticesOfAbseron.includes(region);
 }
-//for finding end region. Selecting same region and neighbor regions is excluded
+
 function endfinder(startKey){
     var ender = Math.floor(Math.random()*71);
     var ending = Object.keys(titleid)[ender];
@@ -278,19 +299,62 @@ function endfinder(startKey){
     console.log(ending);
     return ending;
 }
-//Now it is the title of the start
-const startKey = Object.keys(titleid)[startindex];
-console.log("Starting:",startKey);
-//title of the end
-var endKey = endfinder(startKey);
-//we find the shortest path from start to end
-const shortestPath = findShortestPath(graph, startKey, endKey);
-const numberofshortestpath = shortestPath.length;
-//We allow 40% accuracy mistake
-var allowednumberofpath = Math.round(shortestPath.length*1.4);
-const FromTo = 'From '+startKey+' to '+endKey;
+
+function randomRegions(difficultyLevel){
+    var min_path_count = 0;
+    var max_path_count = 99;
+    var diff_index = 2;
+    //Choosing random start
+    if(difficultyLevel == 'easy'){
+        diff_index = 2
+        min_path_count = 3
+        max_path_count = 5
+    }
+
+    if(difficultyLevel == 'medium'){
+        diff_index = 1.8
+        min_path_count = 6
+        max_path_count = 9
+    }
+
+    if(difficultyLevel == 'hard'){
+        diff_index = 1.5
+        min_path_count = 10
+        max_path_count = 99
+    }
+
+    const startindex = Math.floor(Math.random()*71);
+    const startKey = Object.keys(titleid)[startindex];
+    console.log("Starting:",startKey);
+    //title of the end
+    var endKey = endfinder(startKey);
+    //we find the shortest path from start to end
+    const shortestPath = findShortestPath(graph, startKey, endKey);
+    console.log(shortestPath);
+    const numberofshortestpath = shortestPath.length;
+
+    if(numberofshortestpath < min_path_count || numberofshortestpath > max_path_count){
+        randomRegions(difficultyLevel);
+    }
+    var allowednumberofpath = Math.round((shortestPath.length-2)*diff_index);
+    return {
+        "startKey":startKey,
+        "endKey":endKey,
+        "shortestPath":shortestPath,
+        "allowednumberofpath":allowednumberofpath,
+        "numberofshortestpath":numberofshortestpath
+    };
+}
+var pathData = randomRegions(diffucultyLevel);
+var startKey = pathData["startKey"];
+var endKey = pathData["endKey"];
+var shortestPath = pathData["shortestPath"];
+var allowednumberofpath = pathData["allowednumberofpath"];
+var numberofshortestpath = pathData["numberofshortestpath"];
+
+const FromTo = `<span style="color: #02c95f;">${startKey}</span> <span style="color: black;">${"&#10141"}</span> <span style="color: #c90502;">${endKey}</span>`;
 //For display
-document.getElementById('fromto').innerText=FromTo;
+document.getElementById('fromto').innerHTML=FromTo;
 //during the game all the regions that are neighbor with startkey
 var neighbors = [startKey];
 //during the game all the regions that are not neighbor with startkey
@@ -314,13 +378,13 @@ function loadAndManipulateSVG() {
 
         var ending = svgDoc.getElementById(titleid[endKey]);
         ending.style.display = 'block';
-        ending.setAttribute("fill","black");
+        ending.setAttribute("fill","#c90502");
 
         document.getElementById("svgContainer").appendChild(svgDoc.documentElement);
     })
     .catch(error => console.error("Error loading SVG:", error));
 }
-loadAndManipulateSVG();
+
 //for checking/changing neighbors/notneigbors according to the changes.
 function checknotneighbors(){
     var changed=[];
@@ -355,6 +419,14 @@ function showSVGPart() {
     var inputfield =document.getElementById("svgPartInput");
     var title = inputfield.value;
     title=titlehandler(title);
+    if(allregions.includes(title)){
+        popupHandler("Artıq daxil edilib!");
+        return;
+    }
+    if(title == startKey || title == endKey){
+        popupHandler("Başlanğıc və ya təyinat nöqtəsi daxil edilə bilməz");
+        return;
+    }
     console.log('Title',title);
     inputfield.value="";
     inputfield.focus();
@@ -376,6 +448,7 @@ function showSVGPart() {
     if (partElement) {
         const title = partElement.getAttribute('title');
         allregions.push(title);
+        console.log(allregions);
         //displaying included region
         partElement.style.display = 'block';
         console.log(title);
@@ -423,10 +496,13 @@ function showSVGPart() {
                 var element = document.getElementById(titleid[notneighbors[i]]);
                 element.setAttribute('fill','gray');
             }
+            document.getElementById('restartButton').style.display = "block";
+
         }
         //if chances became 0 and none of them executed then it means we didnt won
         else if(allowednumberofpath===0){
             document.createElement('p').innerText="You didn't won"
+            document.getElementById('restartButton').style.display = "block";
         }
     } else {
         console.error("Element with ID '" + partID + "' not found in the SVG.");
@@ -436,3 +512,38 @@ else if(!partElement){
     console.error("Element with ID '" + partID + "' not found in the SVG.");
 }
 }
+
+function resetGame(){
+    counter=0;
+
+    var pathData = randomRegions(diffucultyLevel);
+    var startKey = pathData["startKey"];
+    var endKey = pathData["endKey"];
+    var shortestPath = pathData["shortestPath"];
+    var allowednumberofpath = pathData["allowednumberofpath"];
+    var numberofshortestpath = pathData["numberofshortestpath"];
+    
+    const FromTo = `<span style="color: #02c95f;">${startKey}</span> <span style="color: black;">${"&#10141"}</span> <span style="color: #c90502;">${endKey}</span>`;
+    //For display
+    document.getElementById('fromto').innerHTML=FromTo;
+    //during the game all the regions that are neighbor with startkey
+    var neighbors = [startKey];
+    //during the game all the regions that are not neighbor with startkey
+    var notneighbors = [endKey];
+    var allregions = [];
+
+    loadAndManipulateSVG();
+};
+
+function restartGame() {
+    location.reload();
+};
+
+function popupHandler(content) {
+    document.getElementById("popup-content").innerText = content;
+    window.location.hash = 'popup1';
+    setTimeout(function() {
+        window.location.hash = '';
+    }, 1400);
+
+};

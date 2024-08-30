@@ -12,6 +12,9 @@ path {
 	animation: pather 600ms;
 	transform-origin: center;
 	transition: 200ms;
+	stroke: black;
+	stroke-width: 2;
+
 }
 
 path:hover {
@@ -34,6 +37,21 @@ button,input {
 	border: none;
 	border: 1px solid #666;
 }
+
+#restartButton {
+    padding: 15px 20px;
+    border-radius: 7px;
+    border: none;
+    background-color: #bcc;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#restartButton:hover {
+    background-color: #aff;
+}
+
+
 
 input {
 	padding: 5px 17px;
@@ -140,3 +158,63 @@ button:hover {
 #svgPartInput {
 	padding: 13px
 }
+
+
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+  }
+  .overlay:target {
+	visibility: visible;
+	opacity: 1;
+  }
+  
+  .popup {
+	border: 2px solid black;
+	margin: 70px auto;
+	padding: 20px;
+	background: #fff;
+	border-radius: 5px;
+	width: 30%;
+	position: relative;
+	transition: all 5s ease-in-out;
+  }
+
+  .popup .close {
+	position: absolute;
+	top: 10%;
+	right: 30px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+  }
+  .popup .close:hover {
+	color: #06D85F;
+  }
+  .popup .content {
+	margin-top: 0;
+	top: 10%;
+	overflow: auto;
+  }
+  
+  @media screen and (max-width: 700px){
+	.box{
+	  width: 70%;
+	}
+	.popup{
+	  width: 70%;
+	}
+  }
+
+.clicked {
+    background-color: #FF5733; /* New color */
+}
+
