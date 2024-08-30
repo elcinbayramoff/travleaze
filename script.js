@@ -146,27 +146,34 @@ const titleid= {
     "Zərdab": "AZ-ZAR",
     "Zəngəzur":"AZ-ZGR"
 }
-var diffucultyLevel = '';
+var difficultyLevel = 'easy';
+document.getElementById('easy').classList.add('clicked');
 document.getElementById('easy').addEventListener('click', function() {
     this.classList.add('clicked');
-    diffucultyLevel = 'easy';
-    resetGame();
+    difficultyLevel = 'easy';
+    // localStorage.setItem('difficultyLevel', difficultyLevel);
+    // location.reload();
     document.getElementById('medium').classList.remove('clicked');
     document.getElementById('hard').classList.remove('clicked');
+    resetGame(difficultyLevel);
 });
 document.getElementById('medium').addEventListener('click', function() {
     this.classList.add('clicked');
-    diffucultyLevel ='medium';
-    resetGame();
+    difficultyLevel ='medium';
+    // localStorage.setItem('difficultyLevel', difficultyLevel);
+    // location.reload();
     document.getElementById('easy').classList.remove('clicked');
     document.getElementById('hard').classList.remove('clicked');
+    resetGame(difficultyLevel);
 });
 document.getElementById('hard').addEventListener('click', function() {
     this.classList.add('clicked');
-    diffucultyLevel = 'hard';
-    resetGame();
+    difficultyLevel = 'hard';
+    // localStorage.setItem('difficultyLevel', difficultyLevel);
+    // location.reload();
     document.getElementById('easy').classList.remove('clicked');
     document.getElementById('medium').classList.remove('clicked');
+    resetGame(difficultyLevel);
 });
 
 //till findShortestPath it is for giving suggestions
@@ -322,7 +329,6 @@ function randomRegions(difficultyLevel){
         min_path_count = 10
         max_path_count = 99
     }
-
     const startindex = Math.floor(Math.random()*71);
     const startKey = Object.keys(titleid)[startindex];
     console.log("Starting:",startKey);
@@ -332,9 +338,10 @@ function randomRegions(difficultyLevel){
     const shortestPath = findShortestPath(graph, startKey, endKey);
     console.log(shortestPath);
     const numberofshortestpath = shortestPath.length;
+    console.log(min_path_count, max_path_count, numberofshortestpath);
 
     if(numberofshortestpath < min_path_count || numberofshortestpath > max_path_count){
-        randomRegions(difficultyLevel);
+        return randomRegions(difficultyLevel);
     }
     var allowednumberofpath = Math.round((shortestPath.length-2)*diff_index);
     return {
@@ -345,13 +352,13 @@ function randomRegions(difficultyLevel){
         "numberofshortestpath":numberofshortestpath
     };
 }
-var pathData = randomRegions(diffucultyLevel);
+var pathData = randomRegions(difficultyLevel);
 var startKey = pathData["startKey"];
 var endKey = pathData["endKey"];
 var shortestPath = pathData["shortestPath"];
 var allowednumberofpath = pathData["allowednumberofpath"];
 var numberofshortestpath = pathData["numberofshortestpath"];
-
+var manipulatedRegions = [];
 const FromTo = `<span style="color: #02c95f;">${startKey}</span> <span style="color: black;">${"&#10141"}</span> <span style="color: #c90502;">${endKey}</span>`;
 //For display
 document.getElementById('fromto').innerHTML=FromTo;
@@ -361,7 +368,7 @@ var neighbors = [startKey];
 var notneighbors = [endKey];
 var allregions = [];
 //loading and making all elements display none. Just start and end is block
-function loadAndManipulateSVG() {
+function loadAndManipulateSVG(startKey, endKey) {
     fetch("azerbaijan.svg")
     .then(response => response.text())
     .then(svgText => {
@@ -376,15 +383,18 @@ function loadAndManipulateSVG() {
         starting.style.display = 'block';
         starting.setAttribute("fill","#0f7");
 
+        manipulatedRegions.push(starting);
         var ending = svgDoc.getElementById(titleid[endKey]);
         ending.style.display = 'block';
         ending.setAttribute("fill","#c90502");
 
+        manipulatedRegions.push(ending);
+        console.log(startKey,endKey);
         document.getElementById("svgContainer").appendChild(svgDoc.documentElement);
     })
     .catch(error => console.error("Error loading SVG:", error));
 }
-
+loadAndManipulateSVG(startKey, endKey);
 //for checking/changing neighbors/notneigbors according to the changes.
 function checknotneighbors(){
     var changed=[];
@@ -420,7 +430,7 @@ function showSVGPart() {
     var title = inputfield.value;
     title=titlehandler(title);
     if(allregions.includes(title)){
-        popupHandler("Artıq daxil edilib!");
+        popupHandler("Artıq daxil edilib!",1400);
         return;
     }
     if(title == startKey || title == endKey){
@@ -446,6 +456,7 @@ function showSVGPart() {
     document.querySelector(".btn.show").innerText="Show (left: "+allowednumberofpath+")";
     let isneighbor = false;
     if (partElement) {
+        manipulatedRegions.push(partElement);
         const title = partElement.getAttribute('title');
         allregions.push(title);
         console.log(allregions);
@@ -501,7 +512,11 @@ function showSVGPart() {
         }
         //if chances became 0 and none of them executed then it means we didnt won
         else if(allowednumberofpath===0){
-            document.createElement('p').innerText="You didn't won"
+            let arr = findShortestPath(graph,startKey, endKey);
+            var element =document.getElementById('fromto');
+            element.innerHTML += "<br>"+arr;
+
+            popupHandler("Məğlub oldun!", 5000);
             document.getElementById('restartButton').style.display = "block";
         }
     } else {
@@ -516,34 +531,44 @@ else if(!partElement){
 function resetGame(){
     counter=0;
 
-    var pathData = randomRegions(diffucultyLevel);
-    var startKey = pathData["startKey"];
-    var endKey = pathData["endKey"];
-    var shortestPath = pathData["shortestPath"];
-    var allowednumberofpath = pathData["allowednumberofpath"];
-    var numberofshortestpath = pathData["numberofshortestpath"];
-    
+    pathData = randomRegions(difficultyLevel);
+    startKey = pathData["startKey"];
+    endKey = pathData["endKey"];
+    shortestPath = pathData["shortestPath"];
+    allowednumberofpath = pathData["allowednumberofpath"];
+    numberofshortestpath = pathData["numberofshortestpath"];
+    console.log("Manipulated: ", manipulatedRegions);
+    manipulatedRegions.forEach(function(element) {
+        element.style.display = 'none';
+    });
+    manipulatedRegions = [];
+
+    var svgContainer = document.getElementById("svgContainer");
+    svgContainer.innerHTML = '';
+
     const FromTo = `<span style="color: #02c95f;">${startKey}</span> <span style="color: black;">${"&#10141"}</span> <span style="color: #c90502;">${endKey}</span>`;
     //For display
     document.getElementById('fromto').innerHTML=FromTo;
     //during the game all the regions that are neighbor with startkey
-    var neighbors = [startKey];
+    neighbors = [startKey];
     //during the game all the regions that are not neighbor with startkey
-    var notneighbors = [endKey];
-    var allregions = [];
-
-    loadAndManipulateSVG();
+    notneighbors = [endKey];
+    allregions = [];
+    document.querySelector(".btn.show").innerText="Show (left: "+allowednumberofpath+")";
+    console.log("HIIIIIIII");
+    console.log("start end: ", startKey, endKey);
+    loadAndManipulateSVG(startKey, endKey);
 };
 
 function restartGame() {
     location.reload();
 };
 
-function popupHandler(content) {
+function popupHandler(content, time) {
     document.getElementById("popup-content").innerText = content;
     window.location.hash = 'popup1';
     setTimeout(function() {
         window.location.hash = '';
-    }, 1400);
+    }, time);
 
 };
