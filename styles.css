@@ -38,31 +38,21 @@ button,input {
 	border: 1px solid #666;
 }
 
-#restartButton {
-    padding: 15px 20px;
-    border-radius: 7px;
-    border: none;
-    background-color: #bcc;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-#restartButton:hover {
-    background-color: #aff;
-}
-
-
 
 input {
 	padding: 5px 17px;
 }
 
 button {
-	background-color: #bcc;
+	background-color: #4CAF50;
+    color: white;
+	font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-	background-color: #aff;
+	background-color: #137a28;
 
 }
 
@@ -133,7 +123,8 @@ button:hover {
 	padding: 7px;
 	border: none;
 	background-color: transparent;
-	text-align: left
+	text-align: left;
+	color : black;
 }
 
 #suggestions button:hover {
@@ -215,6 +206,53 @@ button:hover {
   }
 
 .clicked {
-    background-color: #FF5733; /* New color */
+    background-color: #FF5733; 
 }
 
+.difficulty {
+    border: 2px solid #666;
+    border-radius: 10px; 
+    padding: 15px; 
+    width: 50%;
+    margin-left: 0px;
+    background-color: #f9f9f9; 
+}
+
+.difficulty-title {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center; 
+    margin-bottom: 20px; 
+    color: #4CAF50;
+}
+
+.difficulty-btn-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.difficulty-btn {
+    flex: 1;
+    padding: 10px 0;
+    margin: 0 5px;
+    border: none;
+	border: 1px solid #666;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.difficulty-btn:hover {
+    background-color: #137a28;
+}
+
+.difficulty-btn:first-child {
+    margin-left: 0;
+}
+
+.difficulty-btn:last-child {
+    margin-right: 0;
+}

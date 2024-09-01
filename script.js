@@ -422,7 +422,7 @@ function checknotneighbors(){
 
 }
 // document.getElementById("shortpath").innerText="Left chances: "+allowednumberofpath;
-document.querySelector(".btn.show").innerText="Show (left: "+allowednumberofpath+")";
+document.querySelector(".btn.show").innerText="Göstər (qalıq: "+allowednumberofpath+")";
 //How many is inputted
 let counter=0;
 function showSVGPart() {
@@ -434,7 +434,7 @@ function showSVGPart() {
         return;
     }
     if(title == startKey || title == endKey){
-        popupHandler("Başlanğıc və ya təyinat nöqtəsi daxil edilə bilməz");
+        popupHandler("Başlanğıc və ya təyinat nöqtəsi daxil edilə bilməz",1400);
         return;
     }
     console.log('Title',title);
@@ -453,7 +453,7 @@ function showSVGPart() {
         nameList.appendChild(listItem);
     allowednumberofpath=allowednumberofpath-1;
     // document.getElementById("shortpath").innerText="Left chances: "+allowednumberofpath;
-    document.querySelector(".btn.show").innerText="Show (left: "+allowednumberofpath+")";
+    document.querySelector(".btn.show").innerText="Göstər (qalıq: "+allowednumberofpath+")";
     let isneighbor = false;
     if (partElement) {
         manipulatedRegions.push(partElement);
@@ -475,8 +475,6 @@ function showSVGPart() {
                 if(notneighbors.includes(title)){
                     notneighbors = notneighbors.filter(value=> value!==title)
                 }
-                console.log(notneighbors);
-                console.log(neighbors);
                 //updates all the regions according to new changes. F.e, region A and C are not neighbor, but B is neighbor with both. Then when B added
                 //this function helps to check all previously added regions' status
                 checknotneighbors();
@@ -498,7 +496,7 @@ function showSVGPart() {
                     path.classList.add("winimate")
                 }, i * 200)
             console.log(paths)
-            element.innerText = arr;
+            element.innerHTML += "<br><span style='font-size: 17px;'>" +"Cavab: " + arr + "</span>";
             const pathElements = document.getElementsByTagName("path");
             for (let i = 0; i < pathElements.length; i++) {
                 pathElements[i].style.display = "block";
@@ -514,7 +512,7 @@ function showSVGPart() {
         else if(allowednumberofpath===0){
             let arr = findShortestPath(graph,startKey, endKey);
             var element =document.getElementById('fromto');
-            element.innerHTML += "<br>"+arr;
+            element.innerHTML += "<br><span style='font-size: 17px;'>" +"Cavab: " + arr + "</span>";
 
             popupHandler("Məğlub oldun!", 5000);
             document.getElementById('restartButton').style.display = "block";
@@ -554,8 +552,11 @@ function resetGame(){
     //during the game all the regions that are not neighbor with startkey
     notneighbors = [endKey];
     allregions = [];
-    document.querySelector(".btn.show").innerText="Show (left: "+allowednumberofpath+")";
-    console.log("HIIIIIIII");
+    const nameList = document.getElementById("nameList");
+    nameList.innerHTML = '';
+    document.getElementById("restartButton").style.display="none";
+    document.querySelector(".btn.show").innerText="Göstər (qalıq: "+allowednumberofpath+")";
+
     console.log("start end: ", startKey, endKey);
     loadAndManipulateSVG(startKey, endKey);
 };

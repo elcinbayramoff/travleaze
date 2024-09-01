@@ -19,17 +19,21 @@
 <body>
     <div class="top row box">
         <div class="col">
+
             <div class="difficulty">
-                <p>Select difficulty level:</p>
-                <button type="button" class="difficulty-btn" id="easy">asan</button>
-                <button type="button" class="difficulty-btn" id="medium">orta</button>
-                <button type="button" class="difficulty-btn" id="hard">çətin</button>
+                <h2 class="difficulty-title">Çətinlik səviyyəsini seç:</h2>
+                <div class="difficulty-btn-container">
+                    <button type="button" class="difficulty-btn" id="easy">asan</button>
+                    <button type="button" class="difficulty-btn" id="medium">orta</button>
+                    <button type="button" class="difficulty-btn" id="hard">çətin</button>
+                </div>
             </div>
+            
             <h2 id="fromto"></h2>
             <ul id="nameList"></ul>
-            <input type="text" id="svgPartInput" placeholder="Next region?">
-            <button onclick="showSVGPart()" class="btn show">Show</button>
-            <button id="restartButton" onclick="restartGame()" style="display: none;">Yenidən başla</button>
+            <input type="text" id="svgPartInput" placeholder="Təxmininiz?">
+            <button onclick="showSVGPart()" class="btn show">Göstər</button>
+            <button type="button" id="restartButton" onclick="restartGame()" style="display: none;">Yenidən başla</button>
             <p id="shortpath"></p>
             <div id="suggestions"></div>
         </div>
